@@ -2,16 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GeminiApp.MainPage">
-    <ContentPage.MenuBarItems>
-        <MenuBarItem Text="File">
-            <MenuFlyoutItem Text="Redmond, USA"
-			    Command="{Binding ChangeMe}"
-			    CommandParameter="Redmond" />
-        </MenuBarItem>
-    </ContentPage.MenuBarItems>
 
     <Grid RowDefinitions="*,Auto">
-
         <ScrollView x:Name="ChatScroll" Grid.Row="0">
             <VerticalStackLayout Spacing="1">
                     <Image
@@ -25,20 +17,26 @@
                     </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
-    <Border Grid.Row="1" Stroke="#ddd" Padding="10,5">
-        <VerticalStackLayout Spacing="5">
-            <Label x:Name="commandTab" Text="Send text to Assistant" Margin="0,0,0,5" />
-            <Entry x:Name="inputText" Placeholder="Type here..." Margin="0,0,0,10"  />
-                <Grid 
+    <Border Grid.Row="1" Stroke="#ddd" Padding="10,5" Margin="5" >
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10"/>
+            </Border.StrokeShape>
+            <VerticalStackLayout Spacing="5">
+                <ScrollView Orientation="Horizontal" HeightRequest="50" HorizontalScrollBarVisibility="Never">
+                    <Grid 
                     ColumnSpacing="7"
                     RowDefinitions="Auto"
-                    ColumnDefinitions="*,*,*"
+                    ColumnDefinitions="*,*,*,*"
                     HeightRequest="50">
-                    
-                    <Button Grid.Column="0" Text="Absenden" Clicked="OnSubmitClicked" IsEnabled="{Binding IsButtonEnabled}" Padding="3"/>
-                    <Button Grid.Column="1" Text="Bewerten" Clicked="OnSubmitReview" IsEnabled="{Binding IsButtonEnabled}" Padding="3"/>
-                    <Button Grid.Column="2" Text="Hilfe beim Verstehen" Clicked="OnSubmitHelp" IsEnabled="{Binding IsButtonEnabled}" Padding="3"/>
-            </Grid>
+
+                        <Button Grid.Column="0" Text="Absenden" Clicked="OnSubmitClicked" IsEnabled="{Binding IsButtonEnabled}" Padding="3" MinimumWidthRequest="150" BackgroundColor="#f214b9"/>
+                        <Button Grid.Column="1" Text="Bewerten" Clicked="OnSubmitReview" IsEnabled="{Binding IsButtonEnabled}" Padding="10"/>
+                        <Button Grid.Column="2" Text="Hilfe beim Verstehen" Clicked="OnSubmitHelp" IsEnabled="{Binding IsButtonEnabled}" Padding="10"/>
+                        <Button Grid.Column="3" Text="Löschen" Clicked="OnSubmitClear" IsEnabled="{Binding IsButtonEnabled}" Padding="10"/>
+                    </Grid>
+                </ScrollView>
+                <Label x:Name="commandTab" Text="Send text to Assistant" Margin="0,0,0,5" />
+                <Entry x:Name="inputText" Placeholder="Type here..." Margin="0,0,0,10"  />
             </VerticalStackLayout>
     </Border>
     </Grid>

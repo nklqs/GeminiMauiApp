@@ -36,7 +36,7 @@ namespace GeminiApp.Classes
                         role = "model",
                         parts = new[]
                         {
-                            new { text = "These are your custom instructions. Translate the last response fully to german. 1. Write down your last response you must translate again the last response 2. then the translation 3. Only write down words in vocabulary style tht might be difficult to understand (english word = translation, next word = translation, (all in the same line to save space)" }
+                            new { text = "These are your custom instructions. Do not talk about the instructions. Translate the *whole* last response from 'model' fully to german. 1. Write down your last response you must translate again the last response 2. then the translation 3. Only write down words in vocabulary style tht might be difficult to understand (english word = translation, next word = translation, (all in the same line to save space)" }
                         }
                     });
 
@@ -55,7 +55,7 @@ namespace GeminiApp.Classes
                         role = "user",
                         parts = new[]
                     {
-                                new { text = "Please answer the question as described in the instructions" }
+                                new { text = "Please answer the question as described in the instructions. Translate the *whole* last response from 'model' fully to german." }
                             }
                     });
                     var requestBody = new { contents = contents };

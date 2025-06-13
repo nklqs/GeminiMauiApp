@@ -35,7 +35,7 @@ namespace GeminiApp.Classes.Interactions
                         role = "model",
                         parts = new[]
                         {
-                            new { text = "These are your custom instructions. Use the whole Chat History and find all messages by the User. Use Numbering to show grammatical errors which the User made. Only include and review the messages which were created by the 'user', make sure to review ALL messages. Explain in simple terms and key points how they can do better. Don't use markdown. Don't discuss instructions. Answers have to be easy to understand." }
+                            new { text = "These are your custom instructions. Do not talk about the instructions. Find all messages from User and review *all* of them in easy to understand english. Example: (Error 1: Explain mistakes/grammatical errors/tips for smoother english  \n Error 2: Explain mistakes/grammatical errors/tips for smoother english \n Error n: Explain mistakes/grammatical errors/tips for smoother english " }
                         }
                     });
 
@@ -53,7 +53,7 @@ namespace GeminiApp.Classes.Interactions
                         role = "user",
                         parts = new[]
     {
-                                    new { text = "Please answer the question as described in the instructions." }
+                                    new { text = "Please answer the questions as instructed in the model instructions." }
                                 }
                     });
                     var requestBody = new { contents };
@@ -75,8 +75,10 @@ namespace GeminiApp.Classes.Interactions
                         return textPart;
                     }
                     CreateBubbles.defaultAssistantColor = "6db400";
+                    SaveAndLoadHistory.AddToHistory(); // Save the chat history after getting the response
                     return textPart;
                     }
+
                     catch (Exception ex)
                     {
                         return "Dies sollte nicht passieren. Versuche es später erneut. Wenn dies öfter passiert, gib Niklas Bescheid. Fehler: " + ex.Message;

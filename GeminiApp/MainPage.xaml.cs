@@ -27,8 +27,8 @@ namespace GeminiApp
             var bubble = CreateBubbles.CreateUserBubble(input);
             bubbleContainer.Children.Add(bubble);
             if (_viewModel != null)
-             {
-              _viewModel.IsButtonEnabled = false; // disable the button
+            {
+                _viewModel.IsButtonEnabled = false; // disable the button
             }
             string response = await _getRequest.GetResponseAsync(input);
             var assistantBubble = CreateBubbles.CreateAssistantBubble(response);
@@ -44,7 +44,13 @@ namespace GeminiApp
                 await ChatScroll.ScrollToAsync(0, ChatScroll.ContentSize.Height, true);
             }
             inputText.Text = "";
-            inputText.Focus();
+        }
+        private async void commandTab_Clicked(object sender, EventArgs e)
+        {
+            inputText.Completed += async (sender, e) =>
+            {
+                OnSubmitClicked(sender, e);
+            };
         }
         private async void OnSubmitReview(object sender, EventArgs e)
         {
@@ -69,6 +75,7 @@ namespace GeminiApp
             inputText.Text = "";
             inputText.Focus();
         }
+
         private async void OnSubmitHelp(object sender, EventArgs e)
         {
             string input = inputText.Text;
@@ -91,6 +98,15 @@ namespace GeminiApp
             }
             inputText.Text = "";
             inputText.Focus();
+        }
+        private async void OnSubmitClear(object sender, EventArgs e)
+        {
+            bubbleContainer.Children.Clear();
+            GetRequest2._chatHistory.Clear();
+            if (_viewModel != null)
+            {
+                _viewModel.IsButtonEnabled = true;
+            }
         }
     }
 }
