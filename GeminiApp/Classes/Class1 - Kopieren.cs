@@ -55,7 +55,7 @@ namespace GeminiApp.Classes
                     var requestBody = new { contents = contents };
                     var json = System.Text.Json.JsonSerializer.Serialize(requestBody);
                     var request = new HttpRequestMessage(
-                    HttpMethod.Post, "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyA0gYnwEtGBwxAHZ_OQf5Zi45ErhxuxMO4");
+                    HttpMethod.Post, "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=myApiKey");
                     request.Content = new StringContent(json, Encoding.UTF8, "application/json");
                     var response = await _httpClient.SendAsync(request);
                     var jsonString = await response.Content.ReadAsStringAsync();
