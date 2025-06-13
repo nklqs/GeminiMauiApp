@@ -1,11 +1,10 @@
 ﻿using GeminiApp.Classes;
-using static System.Net.Mime.MediaTypeNames;
+using GeminiApp.Classes.Interactions;
 
 namespace GeminiApp
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
         private MainViewModel _viewModel = new MainViewModel();
         public MainPage()
         {
@@ -13,22 +12,9 @@ namespace GeminiApp
             BindingContext = _viewModel;
         }
 
-        //private void OnCounterClicked(object? sender, EventArgs e)
-        //{
-        //    count++;
-
-        //    if (count == 1)
-        //        CounterBtn.Text = $"Clicked {count} time";
-        //    else
-        //        CounterBtn.Text = $"Clicked {count} times";
-
-        //    SemanticScreenReader.Announce(CounterBtn.Text);
-        //}
-
-
-
-
         private readonly GetRequest2 _getRequest = new();
+        private readonly GetReview _getReview = new();
+        private readonly GetTranslation _getTranslation = new();
         private async void OnSubmitClicked(object sender, EventArgs e)
         {
             string input = inputText.Text;
@@ -38,78 +24,73 @@ namespace GeminiApp
                 commandTab.Text = "Bitte geben Sie einen Text ein.";
                 return;
             }
-            createUserBubble(input);
-             if (_viewModel != null)
+            var bubble = CreateBubbles.CreateUserBubble(input);
+            bubbleContainer.Children.Add(bubble);
+            if (_viewModel != null)
              {
               _viewModel.IsButtonEnabled = false; // disable the button
             }
-
-            try
+            string response = await _getRequest.GetResponseAsync(input);
+            var assistantBubble = CreateBubbles.CreateAssistantBubble(response);
+            bubbleContainer.Children.Add(assistantBubble);
+            if (_viewModel != null)
             {
-                string response = await _getRequest.GetResponseAsync(input);
-                createAssistantBubble(response);
-            }
-            catch (Exception ex)
-            {
-                createAssistantBubble("Fehler: " + ex.Message); // Display error message
+                _viewModel.IsButtonEnabled = true;
             }
 
-            // Re-enable the button if needed
-             if (_viewModel != null)
-             {
-                 _viewModel.IsButtonEnabled = true;
-             }
-
+            await Task.Delay(100);
+            if (ChatScroll.ContentSize.Height > ChatScroll.Height)
+            {
+                await ChatScroll.ScrollToAsync(0, ChatScroll.ContentSize.Height, true);
+            }
             inputText.Text = "";
             inputText.Focus();
         }
-        public void createAssistantBubble(string response)
+        private async void OnSubmitReview(object sender, EventArgs e)
         {
-            Frame bubble = new()
+            string input = inputText.Text;
+            if (_viewModel != null)
             {
-                BackgroundColor = Color.FromArgb("2bf5fb"),
-                CornerRadius = 15,
-                Padding = 20,
-                HasShadow = true,
-                Margin = new Thickness(0, 0, 0, 100)
-            };
-            Label label = new Label
-            {
-                Text = response,
-                HorizontalOptions = LayoutOptions.Start,
-                TextColor = Color.FromArgb("000000")
-            };
-            bubble.Content = label;
-
-            // Add BubbleFrame to BubbleContainer
-            bubbleContainer.Children.Add(bubble);
-            if (bubbleContainer.Children.Count > 0)
-            {
-                var lastBubble = bubbleContainer.Children.Last();
-                ChatScroll.ScrollToAsync((Element)lastBubble, ScrollToPosition.End, true);
+                _viewModel.IsButtonEnabled = false; // disable the button
             }
+            string response = await _getReview.GetResponseAsync();
+            var assistantBubble = CreateBubbles.CreateAssistantBubble(response);
+            bubbleContainer.Children.Add(assistantBubble);
+            if (_viewModel != null)
+            {
+                _viewModel.IsButtonEnabled = true;
+            }
+
+            await Task.Delay(100);
+            if (ChatScroll.ContentSize.Height > ChatScroll.Height)
+            {
+                await ChatScroll.ScrollToAsync(0, ChatScroll.ContentSize.Height, true);
+            }
+            inputText.Text = "";
+            inputText.Focus();
         }
-        public void createUserBubble(string response)
+        private async void OnSubmitHelp(object sender, EventArgs e)
         {
-            Frame bubble = new()
+            string input = inputText.Text;
+            if (_viewModel != null)
             {
-                BackgroundColor = Color.FromArgb("3385ff"),
-                CornerRadius = 15,
-                Padding = 10,
-                HasShadow = true,
-                Margin = new Thickness(20, 0, 0, 0)
-            };
-            Label label = new Label
+                _viewModel.IsButtonEnabled = false; // disable the button
+            }
+            string response = await _getTranslation.GetResponseAsync();
+            var assistantBubble = CreateBubbles.CreateAssistantBubble(response);
+            bubbleContainer.Children.Add(assistantBubble);
+            if (_viewModel != null)
             {
-                Text = response,
-                HorizontalOptions = LayoutOptions.End,
-                TextColor = Color.FromArgb("000000")
-            };
-            bubble.Content = label;
+                _viewModel.IsButtonEnabled = true;
+            }
 
-            // Add BubbleFrame to BubbleContainer
-            bubbleContainer.Children.Add(bubble);
+            await Task.Delay(100);
+            if (ChatScroll.ContentSize.Height > ChatScroll.Height)
+            {
+                await ChatScroll.ScrollToAsync(0, ChatScroll.ContentSize.Height, true);
+            }
+            inputText.Text = "";
+            inputText.Focus();
         }
-
     }
 }

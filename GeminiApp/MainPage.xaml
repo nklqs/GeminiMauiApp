@@ -2,28 +2,44 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GeminiApp.MainPage">
+    <ContentPage.MenuBarItems>
+        <MenuBarItem Text="File">
+            <MenuFlyoutItem Text="Redmond, USA"
+			    Command="{Binding ChangeMe}"
+			    CommandParameter="Redmond" />
+        </MenuBarItem>
+    </ContentPage.MenuBarItems>
 
     <Grid RowDefinitions="*,Auto">
 
         <ScrollView x:Name="ChatScroll" Grid.Row="0">
-            <VerticalStackLayout Spacing="10">
+            <VerticalStackLayout Spacing="1">
                     <Image
                     Source="dotnet_bot.png"
                     HeightRequest="185"
                     Aspect="AspectFit"
                     SemanticProperties.Description="dot net bot in a hovercraft number nine" />
 
-                    <VerticalStackLayout x:Name="bubbleContainer" Padding="20" HorizontalOptions="Center" VerticalOptions="Center">
+                    <VerticalStackLayout x:Name="bubbleContainer" Padding="10" HorizontalOptions="Center" VerticalOptions="Center">
                     <!--Chat bubbles go in here!-->
                     </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
     <Border Grid.Row="1" Stroke="#ddd" Padding="10,5">
-        <VerticalStackLayout Spacing="10">
-            <Label x:Name="commandTab" Text="Send text to Assistant" Margin="0,0,0,10" />
-            <Entry x:Name="inputText" Placeholder="Type here..." Margin="0,0,0,20"  />
-            <Button Text="Absenden" Clicked="OnSubmitClicked" IsEnabled="{Binding IsButtonEnabled}"/>
-        </VerticalStackLayout>
+        <VerticalStackLayout Spacing="5">
+            <Label x:Name="commandTab" Text="Send text to Assistant" Margin="0,0,0,5" />
+            <Entry x:Name="inputText" Placeholder="Type here..." Margin="0,0,0,10"  />
+                <Grid 
+                    ColumnSpacing="7"
+                    RowDefinitions="Auto"
+                    ColumnDefinitions="*,*,*"
+                    HeightRequest="50">
+                    
+                    <Button Grid.Column="0" Text="Absenden" Clicked="OnSubmitClicked" IsEnabled="{Binding IsButtonEnabled}" Padding="3"/>
+                    <Button Grid.Column="1" Text="Bewerten" Clicked="OnSubmitReview" IsEnabled="{Binding IsButtonEnabled}" Padding="3"/>
+                    <Button Grid.Column="2" Text="Hilfe beim Verstehen" Clicked="OnSubmitHelp" IsEnabled="{Binding IsButtonEnabled}" Padding="3"/>
+            </Grid>
+            </VerticalStackLayout>
     </Border>
     </Grid>
 

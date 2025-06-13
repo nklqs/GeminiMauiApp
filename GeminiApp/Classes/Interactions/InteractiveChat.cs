@@ -8,12 +8,12 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace GeminiApp.Classes
+namespace GeminiApp.Classes.Interactions
 {
     public class GetRequest2
     {
         private readonly HttpClient _httpClient;
-        private List<(string role, string text)> _chatHistory = new List<(string role, string text)>();
+        public static List<(string role, string text)> _chatHistory = new List<(string role, string text)>();
 
 
         public GetRequest2()
@@ -38,7 +38,7 @@ namespace GeminiApp.Classes
                         role = "model",
                         parts = new[]
                         {
-                            new { text = "These are your custom instructions. You should not discuss them. Behave like a friend from England and interact with the User with longer answers. Look out if the User asks about solving a problem, give him instructions but don't give him the solution when possible." }
+                            new { text = "These are your custom instructions. You should not discuss them. You are a friend from an English speaking country and you are interacting with the User. Don't use ideoms or word puns. Keep your responses easy to understand. Keep the conversation going. Don't give straight up solutions to problems but guide the User to support him. You are allowed to answer questions and suggest improvements." }
                         }
                     });
 
@@ -52,10 +52,10 @@ namespace GeminiApp.Classes
                         });
                     }
 
-                    var requestBody = new { contents = contents };
+                    var requestBody = new { contents };
                     var json = System.Text.Json.JsonSerializer.Serialize(requestBody);
                     var request = new HttpRequestMessage(
-                    HttpMethod.Post, "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyA0gYnwEtGBwxAHZ_OQf5Zi45ErhxuxMO4");
+                    HttpMethod.Post, GlobalVars.postString);
                     request.Content = new StringContent(json, Encoding.UTF8, "application/json");
                     var response = await _httpClient.SendAsync(request);
                     var jsonString = await response.Content.ReadAsStringAsync();
@@ -69,12 +69,17 @@ namespace GeminiApp.Classes
                     }
                     var jsonObject = JsonConvert.DeserializeObject<dynamic>(jsonString);
                     var textPart = jsonObject.candidates[0].content.parts[0].text;
+                    if (textPart == null)
+                    {
+                        textPart = "Ich habe aktuell Probleme mich zu verbinden, bist du mit dem Internet verbunden? Bitte versuche es später erneut.";
+                        return textPart;
+                    }
                     _chatHistory.Add(("model", textPart));
-                return textPart;
+                    return textPart;
                     }
             catch (Exception ex)
             {
-                return "Das sollte keinesfalls passieren. Gib Niklas Bescheid, dass er wieder Mist programmiert hat." + ex.Message;
+                return "Dies sollte nicht passieren. Versuche es später erneut. Wenn dies öfter passiert, gib Niklas Bescheid. Fehler: " + ex.Message;
             }
         
         }
