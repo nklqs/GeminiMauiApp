@@ -51,30 +51,13 @@ namespace GeminiApp.Classes.Interactions
                             parts = new[] { new { text } }
                         });
                     }
-
-                    var requestBody = new { contents };
-                    var json = System.Text.Json.JsonSerializer.Serialize(requestBody);
-                    var request = new HttpRequestMessage(
-                    HttpMethod.Post, GlobalVars.postString);
-                    request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-                    var response = await _httpClient.SendAsync(request);
-                    var jsonString = await response.Content.ReadAsStringAsync();
-                    if (jsonString == null)
+                    (bool flowControl, string textPart) = await CreateRequestClass.CreateRequest(contents, _httpClient);
+                    if (!flowControl)
                     {
-                    jsonString = await response.Content.ReadAsStringAsync();
-                    }
-                    if (jsonString == null)
-                    {
-                        jsonString = "Ich habe aktuell Probleme mich zu verbinden, bist du mit dem Internet verbunden? Bitte versuche es später erneut.";
-                    }
-                    var jsonObject = JsonConvert.DeserializeObject<dynamic>(jsonString);
-                    var textPart = jsonObject.candidates[0].content.parts[0].text;
-                    if (textPart == null)
-                    {
-                        textPart = "Ich habe aktuell Probleme mich zu verbinden, bist du mit dem Internet verbunden? Bitte versuche es später erneut.";
                         return textPart;
                     }
                     _chatHistory.Add(("model", textPart));
+                    SaveAndLoadHistory.AddToHistory(_chatHistory);
                     return textPart;
                     }
             catch (Exception ex)

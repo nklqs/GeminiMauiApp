@@ -14,7 +14,6 @@ namespace GeminiApp.Classes
     public class GetTranslation
     {
         private readonly HttpClient _httpClient;
-        private List<(string role, string text)> _chatHistory = GetRequest2._chatHistory;
 
 
         public GetTranslation()
@@ -26,7 +25,7 @@ namespace GeminiApp.Classes
         {
             try
             {
-
+                    List<(string role, string text)> _chatHistory = GetRequest2._chatHistory;
                     // Create the list of message contents
                     var contents = new List<object>();
 
@@ -58,29 +57,12 @@ namespace GeminiApp.Classes
                                 new { text = "Please answer the question as described in the instructions. Translate the *whole* last response from 'model' fully to german." }
                             }
                     });
-                    var requestBody = new { contents = contents };
-                    var json = System.Text.Json.JsonSerializer.Serialize(requestBody);
-                    var request = new HttpRequestMessage(
-                    HttpMethod.Post, GlobalVars.postString);
-                    request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-                    var response = await _httpClient.SendAsync(request);
-                    var jsonString = await response.Content.ReadAsStringAsync();
-                    if (jsonString == null)
+                    (bool flowControl, string textPart) = await CreateRequestClass.CreateRequest(contents, _httpClient);
+                    if (!flowControl)
                     {
-                    jsonString = await response.Content.ReadAsStringAsync();
-                    }
-                    if (jsonString == null)
-                    {
-                        jsonString = "Ich habe aktuell Probleme mich zu verbinden, bist du mit dem Internet verbunden? Bitte versuche es später erneut.";
-                    }
-                    var jsonObject = JsonConvert.DeserializeObject<dynamic>(jsonString);
-                    var textPart = jsonObject.candidates[0].content.parts[0].text;
-                    if (textPart == null)
-                    {
-                        textPart = "Ich habe aktuell Probleme mich zu verbinden, bist du mit dem Internet verbunden? Bitte versuche es später erneut.";
                         return textPart;
                     }
-                    CreateBubbles.defaultAssistantColor = "6db400";
+                CreateBubbles.defaultAssistantColor = "6db400";
                     return textPart;
                     }
             catch (Exception ex)

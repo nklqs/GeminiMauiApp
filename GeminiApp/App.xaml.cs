@@ -1,4 +1,6 @@
-﻿namespace GeminiApp
+﻿using GeminiApp.Classes;
+
+namespace GeminiApp
 {
     public partial class App : Application
     {

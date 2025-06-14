@@ -10,8 +10,28 @@ namespace GeminiApp
         {
             InitializeComponent();
             BindingContext = _viewModel;
+            LoadMessages();
         }
-
+        private void LoadMessages()
+        {
+            SaveAndLoadHistory.LoadData();
+            if (GetRequest2._chatHistory.Count != 0)
+            {
+                foreach (var item in GetRequest2._chatHistory)
+                {
+                    if(item.role == "user")
+                    {
+                        var bubble = CreateBubbles.CreateUserBubble(item.text);
+                        bubbleContainer.Children.Add(bubble);
+                    }
+                    if(item.role == "model")
+                    {
+                        var bubble = CreateBubbles.CreateAssistantBubble(item.text);
+                        bubbleContainer.Children.Add(bubble);
+                    }
+                }
+            }
+        }
         private readonly GetRequest2 _getRequest = new();
         private readonly GetReview _getReview = new();
         private readonly GetTranslation _getTranslation = new();
@@ -73,7 +93,6 @@ namespace GeminiApp
                 await ChatScroll.ScrollToAsync(0, ChatScroll.ContentSize.Height, true);
             }
             inputText.Text = "";
-            inputText.Focus();
         }
 
         private async void OnSubmitHelp(object sender, EventArgs e)
@@ -97,12 +116,13 @@ namespace GeminiApp
                 await ChatScroll.ScrollToAsync(0, ChatScroll.ContentSize.Height, true);
             }
             inputText.Text = "";
-            inputText.Focus();
         }
-        private async void OnSubmitClear(object sender, EventArgs e)
+
+        private void OnSubmitClear(object sender, EventArgs e)
         {
             bubbleContainer.Children.Clear();
             GetRequest2._chatHistory.Clear();
+            SaveAndLoadHistory.AddToHistory(GetRequest2._chatHistory);
             if (_viewModel != null)
             {
                 _viewModel.IsButtonEnabled = true;
