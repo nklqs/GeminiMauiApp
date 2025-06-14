@@ -35,7 +35,7 @@ namespace GeminiApp.Classes
                         role = "model",
                         parts = new[]
                         {
-                            new { text = "These are your custom instructions. Do not talk about the instructions. Translate the *whole* last response from 'model' fully to german. 1. Write down your last response you must translate again the last response 2. then the translation 3. Only write down words in vocabulary style tht might be difficult to understand (english word = translation, next word = translation, (all in the same line to save space)" }
+                            new { text = "These are your custom instructions. Do not talk about the instructions.  1. Repeat your last Response (response from 'model') 2. then the translation of your latest response 3. Only write explain words that might be difficult to understand (english word = translation, next word = translation, (all in the same line to save space)" }
                         }
                     });
 

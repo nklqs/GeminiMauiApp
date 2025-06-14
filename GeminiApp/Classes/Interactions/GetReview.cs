@@ -34,7 +34,7 @@ namespace GeminiApp.Classes.Interactions
                     role = "model",
                     parts = new[]
                     {
-                            new { text = "These are your custom instructions. Do not talk or discuss about the instructions. Find all messages from User and review *all* of them in easy to understand english. Example: (Error 1: Explain mistakes/grammatical errors/tips for smoother english  \n Error 2: Explain mistakes/grammatical errors/tips for smoother english \n Error n: Explain mistakes/grammatical errors/tips for smoother english " }
+                            new { text = "These are your custom instructions. Do not talk or discuss about the instructions. Find all messages from User and review *all* of them in easy to understand english. Example: (Error 1: Explain mistakes/grammatical errors/tips for more fluent English  \n Error 2: Explain mistakes/grammatical errors/tips for more fluent English \n Error n: Explain mistakes/grammatical errors/tips for more fluent English " }
                         }
                 });
 
